@@ -50,8 +50,13 @@ unsigned int read_data (const char *input_file, double **x, double **y, double *
   char word [MAX_LINE_SIZE];
   FILE *f_in = safe_fopen (input_file, "r");
 
-  /* scan the input file */
+  /* initialize the vectors to read */
   vector_size = CHUNK_SIZE;
+  *x = (double *) malloc (vector_size * sizeof (double));
+  *y = (double *) malloc (vector_size * sizeof (double));
+  *sigma = (double *) malloc (vector_size * sizeof (double));
+
+  /* scan the input file */
   n = 0;
   while (fgets (word, sizeof (word), f_in) != NULL) { 
     int n_vals;
