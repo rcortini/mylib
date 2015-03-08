@@ -2,7 +2,11 @@
 #define __MYLIB_UTILS_H__
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
+
+#define MAX_LINE_SIZE 4096
+#define CHUNK_SIZE 100
 
 void log_message (const char *text, ...);
 
