@@ -45,10 +45,9 @@ int safe_realloc (unsigned int new_vector_size, double **vector) {
 
 /* reads the first ncols of data from input_file, and stores the values
  * in the data [i] pointer */
-unsigned int read_data (const char *input_file, unsigned int ncols, double ***data) {
+unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data) {
   unsigned int i, n, vector_size;
   char word [MAX_LINE_SIZE];
-  FILE *f_in = safe_fopen (input_file, "r");
 
   /* initialize the vectors to read */
   vector_size = CHUNK_SIZE;
@@ -89,7 +88,6 @@ unsigned int read_data (const char *input_file, unsigned int ncols, double ***da
       n++;
     }
   }
-  fclose (f_in);
 
   return n;
 }

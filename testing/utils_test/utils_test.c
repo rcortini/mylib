@@ -7,9 +7,10 @@ int main () {
   unsigned int i, j, ncols=5, N;
   double **data;
   const char *big_file_name = "test_big_data.dat";
+  FILE *f_in = safe_fopen (big_file_name, "r");
 
   /* read data from big file */
-  N = read_data (big_file_name, ncols, &data);
+  N = read_data (f_in, ncols, &data);
   log_message ("read %d lines\n", N);
   for (i=0; i<N; i++) {
     for (j=0; j<ncols; j++)
@@ -21,5 +22,8 @@ int main () {
   for (i=0; i<ncols; i++)
     free (data [i]);
   free (data);
+
+  /* close input file */
+  fclose (f_in);
   return 0;
 }
