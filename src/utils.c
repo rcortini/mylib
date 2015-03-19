@@ -43,51 +43,49 @@ int safe_realloc (unsigned int new_vector_size, double **vector) {
   return 0;
 }
 
-/* reads data in <x> <y> <sigma> format from input file stream
- * and returns the number of data points that were read */
-unsigned int read_data (const char *input_file, double **x, double **y, double **sigma) {
-  unsigned int n, vector_size;
+/* reads the first ncols of data from input_file, and stores the values
+ * in the data [i] pointer */
+unsigned int read_data (const char *input_file, unsigned int ncols, double ***data) {
+  unsigned int i, n, vector_size;
   char word [MAX_LINE_SIZE];
   FILE *f_in = safe_fopen (input_file, "r");
 
   /* initialize the vectors to read */
   vector_size = CHUNK_SIZE;
-  *x = (double *) malloc (vector_size * sizeof (double));
-  *y = (double *) malloc (vector_size * sizeof (double));
-  *sigma = (double *) malloc (vector_size * sizeof (double));
+  *data = (double **) malloc (ncols * (sizeof (double *)));
+  for (i=0; i<ncols; i++)
+    (*data) [i] = (double *) malloc (vector_size * sizeof (double));
 
   /* scan the input file */
   n = 0;
   while (fgets (word, sizeof (word), f_in) != NULL) { 
-    int n_vals;
-    double z, F, stdv;
+    double val;
 
-    /* expand the x, y and sigma arrays if necessary */
+    /* expand the data array if necessary */
     if (n>vector_size-1) {
       vector_size += CHUNK_SIZE;
-      
-      if (safe_realloc (vector_size, x) ||
-          safe_realloc (vector_size, y) ||
-          safe_realloc (vector_size, sigma)) {
-	err_message ("No more memory!\n");
-	exit (EXIT_FAILURE);
-      }
+      for (i=0; i<ncols; i++)
+	if (safe_realloc (vector_size, &(*data) [i])) {
+	  err_message ("No more memory!\n");
+	  exit (EXIT_FAILURE);
+	}
     }
 
     /* if it is not a comment, scan a line */
     if (word [0] == '#')
       continue;
     else {
-      n_vals = sscanf (word, "%lf %lf %lf\n", &z, &F, &stdv);
-      if (n_vals==3) {
-	(*x) [n] = z;
-	(*y) [n] = F;
-	(*sigma) [n] = stdv;
+      FILE *stream = fmemopen (word, MAX_LINE_SIZE, "r");
+      for (i=0; i<ncols; i++) {
+	int nvals = fscanf (stream, "%lf ", &val);
+	if (nvals == 0) {
+	  err_message ("File does not contain %d columns!\n", ncols);
+	  exit (EXIT_FAILURE);
+	}
+	else 
+	  (*data) [i] [n] = val;
       }
-      else {
-	err_message ("Incorrect input file format\n");
-	exit (EXIT_FAILURE);
-      }
+      fclose (stream);
       n++;
     }
   }

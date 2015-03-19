@@ -4,15 +4,22 @@
 const char *program_name = "utils_test";
 
 int main () {
-  unsigned int N;
-  double *x, *y, *sigma;
-  const char *file_name = "test_data.dat";
-  log_message ("Hello world!\n");
-  err_message ("Error: %s\n", "error_number");
-  N = read_data (file_name, &x, &y, &sigma);
+  unsigned int i, j, ncols=5, N;
+  double **data;
+  const char *big_file_name = "test_big_data.dat";
+
+  /* read data from big file */
+  N = read_data (big_file_name, ncols, &data);
   log_message ("read %d lines\n", N);
-  free (x);
-  free (y);
-  free (sigma);
+  for (i=0; i<N; i++) {
+    for (j=0; j<ncols; j++)
+      printf ("%f ", data[j][i]);
+    printf ("\n");
+  }
+
+  /* free memory */
+  for (i=0; i<ncols; i++)
+    free (data [i]);
+  free (data);
   return 0;
 }
