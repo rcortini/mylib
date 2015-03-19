@@ -36,7 +36,12 @@ compile
 *~
 
 # programs
+mystat/mystat
 testing/utils_test/utils_test
+testing/mystat
 
 # output file of pkgconfig configuration
 mylib.pc
+
+# data files
+*.dat

@@ -4,11 +4,6 @@
 
 const char *program_name = "mystat";
 
-unsigned int average_devst (FILE *f_in, int col) {
-  (void) f_in;
-  return col;
-}
-
 void print_usage () {
   printf ("Usage: %s [OPTIONS] <filename> <command> ...\n", program_name);
 }
@@ -59,8 +54,9 @@ int main (int argc, char *argv[]) {
   command = argv [optind+1];
   log_message ("command = %s\n", command);
 
-  if (strcmp (command, "average_devst")) {
-    retcode = average_devst (f_in, col);
+  /* now check what is the command and act */
+  if (strcmp (command, "average_variance")==0) {
+    retcode = average_variance (f_in, col);
   }
   else {
     err_message ("Invalid command '%s'\n", command);
