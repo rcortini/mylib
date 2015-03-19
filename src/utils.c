@@ -92,3 +92,49 @@ unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data) {
   /* return the number of lines read */
   return n;
 }
+
+/* reads the col_n-th (starts from 1!) column from a file, and stores it into the data
+ * pointer */
+unsigned int read_data_single_col (FILE *f_in, unsigned int col_n, double **data) {
+  unsigned int n, vector_size;
+  char word [MAX_LINE_SIZE];
+
+  /* initialize the vectors to read */
+  vector_size = CHUNK_SIZE;
+  *data = (double *) malloc (vector_size * (sizeof (double)));
+
+  /* scan the input file */
+  n = 0;
+  while (fgets (word, sizeof (word), f_in) != NULL) { 
+    double val;
+
+    /* expand the data array if necessary */
+    if (n>vector_size-1) {
+      vector_size += CHUNK_SIZE;
+      if (safe_realloc (vector_size, data)) {
+	err_message ("No more memory!\n");
+	exit (EXIT_FAILURE);
+      }
+    }
+
+    /* if it is not a comment, scan a line */
+    if (word [0] == '#')
+      continue;
+    else {
+      unsigned int i;
+      int bytes_now=0, bytes_consumed=0;
+      for (i=0; i<col_n; i++) {
+	if (sscanf (word+bytes_consumed, "%lf%n", &val, &bytes_now) == 1)
+	  bytes_consumed += bytes_now;
+	else {
+	  err_message ("File does not contain %d columns!\n", col_n);
+	  exit (EXIT_FAILURE);
+	}
+      }
+      (*data) [n++] = val;
+    }
+  }
+
+  /* return the number of lines read */
+  return n;
+}
