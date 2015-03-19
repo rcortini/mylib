@@ -74,20 +74,21 @@ unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data) {
     if (word [0] == '#')
       continue;
     else {
-      FILE *stream = fmemopen (word, MAX_LINE_SIZE, "r");
+      int bytes_now=0, bytes_consumed=0;
       for (i=0; i<ncols; i++) {
-	int nvals = fscanf (stream, "%lf ", &val);
-	if (nvals == 0) {
+	if (sscanf (word+bytes_consumed, "%lf%n", &val, &bytes_now) == 1) {
+	  (*data) [i] [n] = val;
+	  bytes_consumed += bytes_now;
+	}
+	else {
 	  err_message ("File does not contain %d columns!\n", ncols);
 	  exit (EXIT_FAILURE);
 	}
-	else 
-	  (*data) [i] [n] = val;
       }
-      fclose (stream);
       n++;
     }
   }
 
+  /* return the number of lines read */
   return n;
 }
