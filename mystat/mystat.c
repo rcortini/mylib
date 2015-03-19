@@ -44,7 +44,6 @@ int main (int argc, char *argv[]) {
 
   /* the first non-option argument is the filename to read */
   filename = argv [optind];
-  log_message ("filename = %s\n", filename);
   if (strcmp (filename, "-")==0)
     f_in = stdin;
   else
@@ -52,7 +51,6 @@ int main (int argc, char *argv[]) {
 
   /* the second non-option argument is the command name to execute */
   command = argv [optind+1];
-  log_message ("command = %s\n", command);
 
   /* now check what is the command and act */
   if (strcmp (command, "average_variance")==0) {
