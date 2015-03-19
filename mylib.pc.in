@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE@
+Description: R.C.'s library for C and stat
+Version: @VERSION@
+Libs: @MYLIB_LIBS@ @LIBS@
+Cflags: @MYLIB_CFLAGS@

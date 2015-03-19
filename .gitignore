@@ -37,3 +37,6 @@ compile
 
 # programs
 testing/utils_test/utils_test
+
+# output file of pkgconfig configuration
+mylib.pc
