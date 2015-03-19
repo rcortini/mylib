@@ -44,7 +44,7 @@ AC_SUBST(GSL_INCLUDES)
 AC_SUBST(GSL_LIBS)
 
 # C flags
-WARN_FLAGS="-Wall -Wextra -Wshadow -Wno-variadic-macros --pedantic"
+WARN_FLAGS="-g -Wall -Wextra -Wshadow -Wno-variadic-macros --pedantic"
 CFLAGS="$WARN_FLAGS -O0"
 CFLAGS_save="$CFLAGS"
 

@@ -1,17 +1,21 @@
 #include "average_variance.h"
 
-#define _AVERAGE(n,sum) (sum/n)
-#define _VARIANCE(n,av,sum2) (n/(n-1.)*(sum2/n - av*av));
+#define _AVERAGE(n,sum) ((sum)/(n))
+#define _VARIANCE(n,av,sum2) ((n)/((n)-1.)*((sum2)/(n) - (av)*(av)));
 #define _DEVST(var) (sqrt(var))
 
-void calculate_sum (unsigned int n, double *data, double *sum) {
+
+
+inline void calculate_sum (unsigned int n, double *data, double *sum) {
   unsigned int i;
   *sum=0.;
   for (i=0; i<n; i++)
     *sum += data[i];
 }
 
-void calculate_sum_sum2 (unsigned int n, double *data, double *sum, double *sum2) {
+
+
+inline void calculate_sum_sum2 (unsigned int n, double *data, double *sum, double *sum2) {
   unsigned int i;
   *sum=0.; *sum2=0.;
   for (i=0; i<n; i++) {
@@ -21,11 +25,11 @@ void calculate_sum_sum2 (unsigned int n, double *data, double *sum, double *sum2
   }
 }
 
+
+
 /* average and standard deviation of a vector */
-unsigned int average (FILE *f_in, int col) {
-  double sum, av;
-  double *data;
-  unsigned int N = read_data_single_col (f_in, col, &data);
+unsigned int average (unsigned int N, double *data, double *av) {
+  double sum;
   double n = (double) N; /* cast to double */
 
   /* check that we have at least two values for the determination of standard deviation */
@@ -38,20 +42,16 @@ unsigned int average (FILE *f_in, int col) {
   calculate_sum (N, data, &sum);
 
   /* calculate average and standard deviation */
-  av = _AVERAGE (n,sum);
-
-  /* output */
-  log_message ("average = %.8e\n", av);
+  *av = _AVERAGE (n,sum);
 
   return MYLIB_SUCCESS;
 }
 
 
+
 /* calculates only the variance */
-unsigned int variance (FILE *f_in, int col) {
-  double sum, sum2, av, var;
-  double *data;
-  unsigned int N = read_data_single_col (f_in, col, &data);
+unsigned int variance (unsigned int N, double *data, double *var) {
+  double sum, sum2, av;
   double n = (double) N; /* cast to double */
 
   /* check that we have at least two values for the determination of standard deviation */
@@ -67,27 +67,26 @@ unsigned int variance (FILE *f_in, int col) {
   av = _AVERAGE (n,sum);
   
   /* calculate variance */
-  var = _VARIANCE (n,av,sum2);
-
-  /* output */
-  log_message ("variance = %.8e\n", var);
+  *var = _VARIANCE (n,av,sum2);
 
   return MYLIB_SUCCESS;
 }
+
+
 
 /* calculates only the standard deviation */
-unsigned int devst (FILE *f_in, int col) {
-  double var = variance (f_in, col);
-  double devst = _DEVST (var);
-  log_message ("devst = %.8e\n", devst);
-  return MYLIB_SUCCESS;
+unsigned int devst (unsigned int N, double *data, double *ds) {
+  double var;
+  unsigned int retcode = variance (N, data, &var);
+  *ds = _DEVST (var);
+  return retcode;
 }
 
+
+
 /* average and standard deviation of a vector */
-unsigned int average_variance (FILE *f_in, int col) {
-  double sum, sum2, av, var;
-  double *data;
-  unsigned int N = read_data_single_col (f_in, col, &data);
+unsigned int average_variance (unsigned int N, double *data, double *av, double *var) {
+  double sum, sum2;
   double n = (double) N; /* cast to double */
 
   /* check that we have at least two values for the determination of standard deviation */
@@ -100,22 +99,19 @@ unsigned int average_variance (FILE *f_in, int col) {
   calculate_sum_sum2 (N, data, &sum, &sum2);
 
   /* calculate average and standard deviation */
-  av = _AVERAGE (n,sum);
+  *av = _AVERAGE (n,sum);
   
   /* calculate variance */
-  var = _VARIANCE (n,av,sum2);
-
-  /* output */
-  log_message ("average = %.8e, variance = %.8e\n", av, var);
+  *var = _VARIANCE (n,*av,sum2);
 
   return MYLIB_SUCCESS;
 }
 
+
+
 /* average and standard deviation of a vector */
-unsigned int average_devst (FILE *f_in, int col) {
-  double sum, sum2, av, var, ds;
-  double *data;
-  unsigned int N = read_data_single_col (f_in, col, &data);
+unsigned int average_devst (unsigned int N, double *data, double *av, double *ds) {
+  double sum, sum2, var;
   double n = (double) N; /* cast to double */
 
   /* check that we have at least two values for the determination of standard deviation */
@@ -128,18 +124,13 @@ unsigned int average_devst (FILE *f_in, int col) {
   calculate_sum_sum2 (N, data, &sum, &sum2);
 
   /* calculate average and standard deviation */
-  av = _AVERAGE (n,sum);
+  *av = _AVERAGE (n,sum);
   
   /* calculate variance */
-  var = _VARIANCE (n,av,sum2);
+  var = _VARIANCE (n,*av,sum2);
 
   /* calculate standard deviation */
-  ds = _DEVST (var);
-
-  /* output */
-  log_message ("average = %.8e, standard deviation = %.8e\n", av, ds);
+  *ds = _DEVST (var);
 
   return MYLIB_SUCCESS;
 }
-
-

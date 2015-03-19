@@ -6,6 +6,13 @@ const char *program_name = "mystat";
 
 void print_usage () {
   printf ("Usage: %s [OPTIONS] <filename> <command> ...\n", program_name);
+  printf ("Commands:\n");
+  printf ("\taverage\n");
+  printf ("\tvariance\n");
+  printf ("\tdevst\n");
+  printf ("\taverage_variance\n");
+  printf ("\taverage_devst\n");
+  printf ("\thistogram <bin_min> <bin_max> <n_bins>\n");
 }
 
 int main (int argc, char *argv[]) {
@@ -15,7 +22,7 @@ int main (int argc, char *argv[]) {
   FILE *f_in;
 
   /* parse command line options */
-  while ((c = getopt (argc, argv, "h::")) != -1) {
+  while ((c = getopt (argc, argv, "c:h::")) != -1) {
     switch (c) {
       case 'h' :
 	print_usage (program_name);
@@ -54,7 +61,63 @@ int main (int argc, char *argv[]) {
 
   /* now check what is the command and act */
   if (strcmp (command, "average_variance")==0) {
-    retcode = average_variance (f_in, col);
+    double av, var;
+    double *data;
+    unsigned int N = read_data_single_col (f_in, col, &data);
+    retcode = average_variance (N, data, &av, &var);
+    log_message ("average = %.8e, variance = %.8e\n", av, var);
+    free (data);
+  }
+  else if (strcmp (command, "average_devst")==0) {
+    double av, ds;
+    double *data;
+    unsigned int N = read_data_single_col (f_in, col, &data);
+    retcode = average_devst (N, data, &av, &ds);
+    log_message ("average = %.8e, standard deviation = %.8e\n", av, ds);
+    free (data);
+  }
+  else if (strcmp (command, "average")==0) {
+    double av;
+    double *data;
+    unsigned int N = read_data_single_col (f_in, col, &data);
+    retcode = average (N, data, &av);
+    log_message ("average = %.8e\n", av);
+    free (data);
+  }
+  else if (strcmp (command, "devst")==0) {
+    double ds;
+    double *data;
+    unsigned int N = read_data_single_col (f_in, col, &data);
+    retcode = devst (N, data, &ds);
+    log_message ("standard deviation = %.8e\n", ds);
+    free (data);
+  }
+  else if (strcmp (command, "variance")==0) {
+    double var;
+    double *data;
+    unsigned int N = read_data_single_col (f_in, col, &data);
+    retcode = variance (N, data, &var);
+    log_message ("variance = %.8e\n", var);
+    free (data);
+  }
+  else if (strcmp (command, "histogram")==0) {
+    unsigned int N, argstart=optind+2, nbins;
+    double bin_min, bin_max;
+    double *data;
+
+    /* get input parameters */
+    if (argc-optind < 5) {
+      err_message ("Insufficient arguments for histogram\n");
+      print_usage ();
+      exit (EXIT_FAILURE);
+    }
+    bin_min = atof (argv [argstart]);
+    bin_max = atof (argv [argstart+1]);
+    nbins = atoi (argv [argstart+2]);
+
+    /* read data */
+    N = read_data_single_col (f_in, col, &data);
+    retcode = histogram (N, data, nbins, bin_min, bin_max);
   }
   else {
     err_message ("Invalid command '%s'\n", command);

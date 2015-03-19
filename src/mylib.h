@@ -5,5 +5,6 @@
 #include "mylib_retcodes.h"
 #include "utils.h"
 #include "average_variance.h"
+#include "histogram.h"
 
 #endif
