@@ -60,14 +60,13 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 
 # the lib-specific flags
-MYLIB_CFLAGS="-I$includedir"
-MYLIB_LIBS="-L$libdir -lmylib"
+MYLIB_CFLAGS="-I$includedir/mylib $GSL_INCLUDES"
+MYLIB_LIBS="-L$libdir -lmylib $GSL_LIBS"
 
 AC_SUBST(MYLIB_CFLAGS)
 AC_SUBST(MYLIB_LIBS)
 
 # output
 AC_CONFIG_FILES([mylib.pc Makefile
-		 mystat/Makefile
 		 src/Makefile])
 AC_OUTPUT
