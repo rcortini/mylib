@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mylib], [0.0.0], [ruggero.cortini@gmail.com])
+AC_INIT([mylib], [0.0.0], [cortini@lptl.jussieu.fr])
 AC_CONFIG_HEADERS([config.h])
 
 # package info
@@ -43,13 +43,17 @@ fi
 AC_SUBST(GSL_INCLUDES)
 AC_SUBST(GSL_LIBS)
 
+# Checks for libraries.
+AC_CHECK_LIB(c, main)
+AC_CHECK_LIB(m, [sqrt])
+
 # C flags
 WARN_FLAGS="-g -Wall -Wextra -Wshadow -Wno-variadic-macros --pedantic"
 CFLAGS="$WARN_FLAGS -O0"
 CFLAGS_save="$CFLAGS"
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdio.h stdarg.h stdlib.h unistd.h string.h])
+AC_CHECK_HEADERS([math.h stdio.h stdarg.h stdlib.h unistd.h string.h])
 
 # Checks for library functions.
 AC_FUNC_MALLOC
