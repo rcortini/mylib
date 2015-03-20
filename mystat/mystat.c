@@ -143,6 +143,44 @@ int main (int argc, char *argv[]) {
     gsl_histogram_free (hist);
     free (data);
   }
+  else if (strcmp (command, "weighted_linear_fit")==0) {
+    double **data;
+    unsigned int i, N = read_data (f_in, 3, &data);
+    double *w = (double *) malloc (N*sizeof (double));
+    double *x, *y;
+    linear_fit_results fit_results;
+
+    /* check the values of the input sigmas  and assign weights*/
+    for (i=0; i<N; i++) {
+      double s = data [2][i];
+      if (s==0) {
+	err_message ("Zero variance point encountered in weighted linear fit!\n");
+	return MYLIB_FAIL;
+      }
+      w [i] = 1./(s*s);
+    }
+    x = data[0];
+    y = data[1];
+
+    /* do the fit */
+    retcode = weighted_linear_fit (N, x, y, w, &fit_results);
+
+    /* print result */
+    printf ("WEIGHTED LEAST-SQUARE LINEAR REGRESSION:\n");
+    printf ("\tGSL exit code = %s\n", gsl_strerror (retcode));
+    printf ("\tc0 = %f c1 = %f\n\n", fit_results.c0, fit_results.c1);
+    printf ("\tcovariance matrix:\n");
+    printf ("\t[ %f  %f ]\n", fit_results.cov00, fit_results.cov01);
+    printf ("\t[ %f  %f ]\n", fit_results.cov01, fit_results.cov00);
+    printf ("\tchi squared = %f\n", fit_results.chisq);
+
+    /* success */
+    free (data[0]);
+    free (data[1]);
+    free (data[2]);
+    free (w);
+    free (data);
+  }
   else {
     err_message ("Invalid command '%s'\n", command);
     print_usage ();

@@ -6,5 +6,6 @@
 #include "utils.h"
 #include "average_variance.h"
 #include "histogram.h"
+#include "fit.h"
 
 #endif
