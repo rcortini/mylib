@@ -16,7 +16,7 @@ void print_usage () {
 }
 
 int main (int argc, char *argv[]) {
-  int c, col = 1;
+  int c, col = 1, vflag = 0;
   unsigned int retcode;
   char *filename, *command;
   FILE *f_in;
@@ -24,11 +24,14 @@ int main (int argc, char *argv[]) {
   (void) old_handler;
 
   /* parse command line options */
-  while ((c = getopt (argc, argv, "c:h::")) != -1) {
+  while ((c = getopt (argc, argv, "c:h::v::")) != -1) {
     switch (c) {
       case 'h' :
 	print_usage (program_name);
 	exit (0);
+	break;
+      case 'v' :
+	vflag = 1;
 	break;
       case 'c' :
 	col = atoi (optarg);
@@ -163,10 +166,11 @@ int main (int argc, char *argv[]) {
     y = data[1];
 
     /* do the fit */
-    retcode = weighted_linear_fit (N, x, y, w, &fit_results);
+    weighted_linear_fit (N, x, y, w, &fit_results);
+    retcode = fit_results.retcode;
 
     /* print result */
-    print_linear_fit_results (retcode, &fit_results);
+    print_linear_fit_results (&fit_results, vflag);
 
     /* success */
     free (data[0]);
@@ -184,15 +188,51 @@ int main (int argc, char *argv[]) {
     y = data[1];
 
     /* do the fit */
-    retcode = linear_fit (N, x, y, &fit_results);
+    linear_fit (N, x, y, &fit_results);
+    retcode = fit_results.retcode;
 
     /* print result */
-    print_linear_fit_results (retcode, &fit_results);
+    print_linear_fit_results (&fit_results, vflag);
 
     /* success */
     free (data[0]);
     free (data[1]);
     free (data);
+  }
+  else if (strcmp (command, "polynomial_fit")==0) {
+    unsigned int N, degree, argstart=optind+2;
+    double **data;
+    double *x, *y;
+    double x0;
+    multifit_results *fit_results;
+
+    /* get input parameters */
+    if (argc-optind < 4) {
+      err_message ("Insufficient arguments for polynomial fit\n");
+      print_usage ();
+      exit (EXIT_FAILURE);
+    }
+    x0 = atof (argv [argstart]);
+    degree = atoi (argv [argstart+1]);
+    fit_results = multifit_results_alloc (degree);
+
+    /* read data from input */
+    N = read_data (f_in, 2, &data);
+    x = data[0];
+    y = data[1];
+
+    /* do the fit */
+    polynomial_fit (N, x, y, degree, x0, fit_results);
+    retcode = fit_results->retcode;
+
+    /* print result */
+    print_multifit_results (fit_results, vflag);
+
+    /* success */
+    free (data[0]);
+    free (data[1]);
+    free (data);
+    multifit_results_free (fit_results);
   }
   else {
     err_message ("Invalid command '%s'\n", command);
