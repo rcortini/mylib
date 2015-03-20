@@ -20,6 +20,8 @@ int main (int argc, char *argv[]) {
   unsigned int retcode;
   char *filename, *command;
   FILE *f_in;
+  gsl_error_handler_t *old_handler = gsl_set_error_handler_off ();
+  (void) old_handler;
 
   /* parse command line options */
   while ((c = getopt (argc, argv, "c:h::")) != -1) {
