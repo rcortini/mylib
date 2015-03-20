@@ -1,7 +1,7 @@
 #include "histogram.h"
 
 unsigned int histogram (unsigned int N, double *data, unsigned int nbins, double bin_min, double bin_max, gsl_histogram **hist) {
-  unsigned int i, sum;
+  unsigned int i;
 
   /* prepare the gsl_histogram structure */
   *hist = gsl_histogram_alloc (nbins);
