@@ -14,6 +14,10 @@ typedef struct linear_fit_results {
   double chisq;
 } linear_fit_results;
 
+void print_linear_fit_results (int fit_result, linear_fit_results *fit_results);
+
+unsigned int linear_fit (unsigned int N, double *x, double *y, linear_fit_results *fit_results);
+
 unsigned int weighted_linear_fit (unsigned int N, double *x, double *y, double *w, linear_fit_results *fit_results);
 
 #endif
