@@ -13,5 +13,6 @@
 #include <mylib/f_min.h>
 #include <mylib/f_multimin.h>
 #include <mylib/fdf_multimin.h>
+#include <mylib/block_average.h>
 
 #endif

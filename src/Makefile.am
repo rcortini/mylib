@@ -15,7 +15,8 @@ pkginclude_HEADERS = mylib.h\
 		  f_min.h\
 		  f_multimin.h\
 		  fdf_multimin.h\
-		  series_accel.h
+		  series_accel.h\
+		  block_average.h
 
 libmylib_la_SOURCES = utils.c utils.h\
 		      average_variance.c average_variance.h\
@@ -27,6 +28,7 @@ libmylib_la_SOURCES = utils.c utils.h\
 		      f_min.c f_min.h\
 		      f_multimin.c f_multimin.h\
 		      fdf_multimin.c fdf_multimin.h\
-		      series_accel.c series_accel.h
+		      series_accel.c series_accel.h\
+		      block_average.c block_average.h
 
 libmylib_la_CPPFLAGS = @GSL_INCLUDES@
