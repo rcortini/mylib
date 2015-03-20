@@ -101,9 +101,10 @@ int main (int argc, char *argv[]) {
     free (data);
   }
   else if (strcmp (command, "histogram")==0) {
-    unsigned int N, argstart=optind+2, nbins;
-    double bin_min, bin_max;
+    unsigned int i, N, argstart=optind+2, nbins;
+    double bin_min, bin_max, sum;
     double *data;
+    gsl_histogram *hist;/*   = NULL; */
 
     /* get input parameters */
     if (argc-optind < 5) {
@@ -117,13 +118,37 @@ int main (int argc, char *argv[]) {
 
     /* read data */
     N = read_data_single_col (f_in, col, &data);
-    retcode = histogram (N, data, nbins, bin_min, bin_max);
+
+    /* calculate histogram */
+    retcode = histogram (N, data, nbins, bin_min, bin_max, &hist);
+
+    /* get total number of values in the histogram */
+    sum = gsl_histogram_sum (hist);
+
+    /* output */
+    for (i=0; i<nbins; i++) {
+      double lower, upper, mean;
+
+      /* get the range of the i-th bin in the histogram, and calculate mean */
+      gsl_histogram_get_range (hist, i, &lower, &upper);
+      mean = (upper+lower)/2.;
+
+      /* write line in file */
+      printf ("%f %f\n", mean, gsl_histogram_get (hist, i)/sum);
+    }
+
+    /* free memory */
+    gsl_histogram_free (hist);
+    free (data);
   }
   else {
     err_message ("Invalid command '%s'\n", command);
     print_usage ();
     exit (EXIT_FAILURE);
   }
+
+  /* close input file */
+  fclose (f_in);
 
   return retcode;
 }
