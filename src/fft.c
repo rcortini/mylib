@@ -2,30 +2,8 @@
 
 
 
-/* returns the real coefficient of the k-th frequency of a radix2 FFT */
-double fft_real_radix2 (unsigned int k, unsigned int N, double *fft_results) {
-  if (k<N/2)
-    return fft_results [k];
-  else
-    return fft_results [N-k];
-}
-
-
-
-/* returns the real coefficient of the k-th frequency of a radix2 FFT */
-double fft_im_radix2 (unsigned int k, unsigned int N, double *fft_results) {
-  if (k==0 || k==N/2)
-    return 0.;
-  else
-    if (k<N/2)
-      return fft_results [N-k];
-    else
-      return -fft_results [N-k];
-}
-
-
-
-/* returns the real coefficient of the k-th frequency of a FFT */
+/* returns the real coefficient of the k-th frequency of a radix2 
+ * or non-radix2 FFT */
 double fft_real (unsigned int k, unsigned int N, double *fft_results) {
   if (k<N/2)
     return fft_results [k];
@@ -35,15 +13,23 @@ double fft_real (unsigned int k, unsigned int N, double *fft_results) {
 
 
 
-/* returns the real coefficient of the k-th frequency of a FFT */
+/* returns the imaginary coefficient of the k-th frequency of a radix2 
+ * or non-radix2 FFT. The storage convention for the two cases is different */
 double fft_im (unsigned int k, unsigned int N, double *fft_results) {
   if (k==0 || k==N/2)
     return 0.;
-  else
-    if (k<N/2)
-      return fft_results [k+1];
+  else {
+    if (is_power_of_n (N,2))
+      if (k<N/2)
+	return fft_results [N-k];
+      else
+	return -fft_results [N-k];
     else
-      return -fft_results [N-k+1];
+      if (k<N/2)
+	return fft_results [k+1];
+      else
+	return -fft_results [N-k+1];
+  }
 }
 
 
@@ -53,32 +39,19 @@ void print_fft_results (unsigned int N, double *fft_results, unsigned int vflag)
   unsigned int i;
   if (vflag) {
     printf ("FAST FOURIER TRANSFORM RESULTS:\n");
-    if (is_power_of_n (N,2))
-      for (i=0; i<N; i++)
-	printf ("f[%d] = Re = %.8e Im = %.8e\n",
-	    i,
-	    fft_real_radix2 (i, N, fft_results),
-	    fft_im_radix2 (i, N, fft_results));
-    else
-      for (i=0; i<N; i++)
-	printf ("f[%d] = Re = %.8e Im = %.8e\n",
-	    i,
-	    fft_real (i, N, fft_results),
-	    fft_im (i, N, fft_results));
+    for (i=0; i<N; i++)
+      printf ("f[%d] = Re = %.8e Im = %.8e\n",
+	  i,
+	  fft_real (i, N, fft_results),
+	  fft_im (i, N, fft_results));
   }
-  else {
-    if (is_power_of_n (N,2))
-      for (i=0; i<N; i++)
-	printf ("%.8e %.8e\n",
-	    fft_real_radix2 (i, N, fft_results),
-	    fft_im_radix2 (i, N, fft_results));
-    else
-      for (i=0; i<N; i++)
-	printf ("%.8e %.8e\n",
-	    fft_real (i, N, fft_results),
-	    fft_im (i, N, fft_results));
-  }
+  else
+    for (i=0; i<N; i++)
+      printf ("%.8e %.8e\n",
+	  fft_real (i, N, fft_results),
+	  fft_im (i, N, fft_results));
 }
+
 
 
 /* calculates the fast Fourier transform of signal data, stores it into fft_results */
@@ -142,4 +115,21 @@ unsigned int inverse_fft (unsigned int N, double *data, double *fft_results) {
 
     return retcode;
   }
+}
+
+
+
+/* calculates the power spectral density of the signal data and stores
+ * it into psd_results */
+unsigned int psd (unsigned int N, double *data, double *psd_results) {
+  unsigned int i;
+  double *fft_results = (double *) malloc (N*sizeof (double));
+  int retcode = fft (N, data, fft_results);
+  for (i=0; i<N; i++) {
+    double re = fft_real (i,N,fft_results);
+    double im = fft_im (i,N,fft_results);
+    psd_results [i] = re*re+im*im;
+  }
+  free (fft_results);
+  return retcode;
 }
