@@ -14,5 +14,7 @@
 #include <mylib/f_multimin.h>
 #include <mylib/fdf_multimin.h>
 #include <mylib/block_average.h>
+#include <mylib/powers.h>
+#include <mylib/fft.h>
 
 #endif
