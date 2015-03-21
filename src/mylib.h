@@ -16,5 +16,6 @@
 #include <mylib/block_average.h>
 #include <mylib/powers.h>
 #include <mylib/fft.h>
+#include <mylib/correlation.h>
 
 #endif
