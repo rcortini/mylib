@@ -6,20 +6,22 @@ void print_block_average_results (block_average_results *results, unsigned int v
   if (vflag) {
     printf ("BLOCK AVERAGING RESULTS:\n");
     for (i=0; i<nblocks; i++)
-      printf ("nblocks = %d: nvals = %d, nstride = %d, mean = %.8e variance = %.8e\n",
-	  i,
+      printf ("nblocks = %d: nvals = %d, nstride = %d, mean = %.8e variance = %.8e block variance = %.8e\n",
+	  i+1,
 	  results->nvals [i],
 	  results->nstride [i],
 	  results->mean [i],
-	  results->var [i]);
+	  results->var [i],
+	  results->blockvar [i]);
   }
   else {
     for (i=0; i<nblocks; i++)
-      printf ("%d %d %.8e %.8e\n",
+      printf ("%d %d %.8e %.8e %.8e\n",
 	  results->nvals [i],
 	  results->nstride [i],
 	  results->mean [i],
-	  results->var [i]);
+	  results->var [i],
+	  results->blockvar [i]);
   }
 }
 
@@ -30,6 +32,7 @@ block_average_results * block_average_results_alloc (unsigned int nblocks) {
   results->nblocks = nblocks;
   results->mean = (double *) malloc (nblocks*sizeof (double));
   results->var = (double *) malloc (nblocks*sizeof (double));
+  results->blockvar = (double *) malloc (nblocks*sizeof (double));
   results->nstride = (int *) malloc (nblocks*sizeof (double));
   results->nvals = (int *) malloc (nblocks*sizeof (double));
   return results;
@@ -39,10 +42,11 @@ block_average_results * block_average_results_alloc (unsigned int nblocks) {
 
 /* frees the memory associated to the block average results */
 void block_average_results_free (block_average_results *results) {
-  free (results->mean);
-  free (results->var);
   free (results->nstride);
   free (results->nvals);
+  free (results->mean);
+  free (results->var);
+  free (results->blockvar);
   free (results);
 }
 
@@ -78,6 +82,10 @@ unsigned int block_average (unsigned int N, double *data, unsigned int nblocks, 
      * in this iteration */
     average (j, blockmean, &results->mean [n]);
     average (j, blockvar, &results->var [n]);
+    if (j>2)
+      variance (j, blockmean, &results->blockvar [n]);
+    else
+      results->blockvar [n] = 0.;
     results->nstride [n] = nstride;
     results->nvals [n] = j;
   }

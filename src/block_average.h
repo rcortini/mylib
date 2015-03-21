@@ -6,6 +6,7 @@
 typedef struct block_average_results {
   double *mean;
   double *var;
+  double *blockvar;
   int *nstride;
   int *nvals;
   unsigned int nblocks;
