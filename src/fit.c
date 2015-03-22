@@ -127,6 +127,8 @@ void polynomial_fit (unsigned int N, double *x, double *y, unsigned int degree, 
 
   /* initialize fitting workspace */
   ws = gsl_multifit_linear_alloc (N, degree);
+
+  /* fit */
   fit_results->retcode = gsl_multifit_linear (X, Y, fit_results->c, fit_results->cov, &fit_results->chisq, ws);
 
   /* free memory */
