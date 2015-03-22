@@ -19,7 +19,8 @@ pkginclude_HEADERS = mylib.h\
 		  block_average.h\
 		  powers.h\
 		  fft.h\
-		  correlation.h
+		  correlation.h\
+		  chi2.h
 
 libmylib_la_SOURCES = utils.c utils.h\
 		      average_variance.c average_variance.h\
@@ -35,6 +36,7 @@ libmylib_la_SOURCES = utils.c utils.h\
 		      block_average.c block_average.h\
 		      powers.c powers.h\
 		      fft.c fft.h\
-		      correlation.c correlation.h
+		      correlation.c correlation.h\
+		      chi2.c chi2.h
 
 libmylib_la_CPPFLAGS = @GSL_INCLUDES@

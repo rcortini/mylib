@@ -1,6 +1,10 @@
 #include "fit.h"
 
 
+/*
+ * LINEAR FITTING 
+ */
+
 
 /* print linear fitting results */
 void print_linear_fit_results (linear_fit_results *fit_results, unsigned int vflag) {
@@ -57,6 +61,11 @@ void weighted_linear_fit (unsigned int N, double *x, double *y, double *w, linea
       &fit_results->cov11,
       &fit_results->chisq);
 }
+
+
+/*
+ * MULTIDIMENSIONAL FITTING
+ */
 
 
 
@@ -135,4 +144,81 @@ void polynomial_fit (unsigned int N, double *x, double *y, unsigned int degree, 
   gsl_multifit_linear_free (ws);
   gsl_matrix_free (X);
   gsl_vector_free (Y);
+}
+
+
+
+/* performs a non-linear best-fit of parameters from a set of weighted data and a model, and
+ * its derivatives, based on the algorithm passed through the fit_p pointer, using a least-square minimization
+ * method */
+void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, multifit_results *results) {
+  int retcode;
+  unsigned int iter = 0, npars = fit_p->npars, n = fit_p->n;
+  const gsl_multifit_fdfsolver_type *T = fit_p->type;
+  gsl_multifit_fdfsolver *s;
+  gsl_multifit_function_fdf f;
+  chi2_parameters chi2_p;
+
+  /* init the chi2 parameters */
+  chi2_p.model_f = fit_p->model_f;
+  chi2_p.model_df = fit_p->model_df;
+  chi2_p.n = n;
+  chi2_p.npars = npars;
+  chi2_p.x = fit_p->x;
+  chi2_p.y = fit_p->y;
+  chi2_p.sigma = fit_p->sigma;
+
+  /* init function to fit: the chi2 of the user-specified function
+   * versus the user-specified data. */
+  f.f = &chi_f;
+  f.df = &chi_df;
+  f.fdf = &chi_fdf;
+  f.n = n;
+  f.p = fit_p->npars;
+  f.params = &chi2_p;
+
+  /* initialize the fitter */
+  s = gsl_multifit_fdfsolver_alloc (T, n, npars);
+  gsl_multifit_fdfsolver_set (s, &f, x_start);
+
+  /* iterate */
+  do {
+    iter++;
+    retcode = gsl_multifit_fdfsolver_iterate (s);
+    if (retcode)
+      break;
+    retcode = gsl_multifit_test_delta (s->dx, s->x, fit_p->eps_abs, fit_p->eps_rel);
+  }
+  while (retcode == GSL_CONTINUE && iter < fit_p->max_iter);
+
+  /* assign the fit vector and the covariance matrix */
+  gsl_multifit_covar (s->J, 0.0, results->cov);
+  gsl_vector_memcpy (results->c, s->x);
+
+  /* the chi2 is the norm of the target function at the last
+   * iteration */
+  results->chisq = gsl_blas_dnrm2 (s->f);
+
+  /* free memory and return */
+  gsl_multifit_fdfsolver_free (s);
+  results->retcode = retcode;
+}
+
+
+
+/* calculates the value of the chi^2, as a function of the best-fit vector of 
+ * parameters, and the parameters of the function fitter */
+double chi2_from_fit (gsl_vector *fit, struct nlin_fit_parameters *fit_pars) {
+  unsigned int i;
+  double chi2 = 0.;
+  gsl_vector *f = gsl_vector_alloc (fit_pars->n);
+  chi_f (fit, fit_pars, f);
+
+  for (i=0; i<fit_pars->n; i++) {
+    double fi = gsl_vector_get (f, i);
+    chi2 += fi*fi;
+  }
+
+  gsl_vector_free (f);
+  return chi2;
 }
