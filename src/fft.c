@@ -119,17 +119,97 @@ unsigned int inverse_fft (unsigned int N, double *data, double *fft_results) {
 
 
 
+/* calculates the fast Fourier transform of a complex packed array, and stores
+ * it into fft_results. The length of the array is 2*N, and the storage
+ * convention is that the real and imaginary parts of the complex number are
+ * stored in consecutive locations */
+unsigned int complex_fft (unsigned int N, double *data, double *fft_results) {
+  unsigned int i;
+
+  /* initialize the data for fft */
+  for (i=0; i<2*N; i++) fft_results [i] = data [i];
+
+  /* use the corresponding routine if N is power of 2 */
+  if (is_power_of_n (N,2)) {
+    /* perform the fft */
+    return gsl_fft_complex_radix2_forward (data, 1, N);
+  }
+  else {
+    int retcode;
+
+    /* alloc memory for wavetable and workspace */
+    gsl_fft_complex_wavetable * wavetable = gsl_fft_complex_wavetable_alloc (N);
+    gsl_fft_complex_workspace * workspace = gsl_fft_complex_workspace_alloc (N);
+
+    /* perform the fft */
+    retcode = gsl_fft_complex_forward (fft_results, 1, N, wavetable, workspace);
+
+    /* free memory */
+    gsl_fft_complex_wavetable_free (wavetable);
+    gsl_fft_complex_workspace_free (workspace);
+
+    return retcode;
+  }
+}
+
+
+
+/* calculates the inverse fast Fourier transform of a complex packed array, and stores
+ * it into fft_results. Storage conventions as for complex_fft */
+unsigned int complex_inverse_fft (unsigned int N, double *data, double *fft_results) {
+  unsigned int i;
+
+  /* initialize the data for fft */
+  for (i=0; i<2*N; i++) fft_results [i] = data [i];
+
+  /* use the corresponding routine if N is power of 2 */
+  if (is_power_of_n (N,2)) {
+    /* perform the fft */
+    return gsl_fft_complex_radix2_inverse (data, 1, N);
+  }
+  else {
+    int retcode;
+
+    /* alloc memory for wavetable and workspace */
+    gsl_fft_complex_wavetable * wavetable = gsl_fft_complex_wavetable_alloc (N);
+    gsl_fft_complex_workspace * workspace = gsl_fft_complex_workspace_alloc (N);
+
+    /* perform the fft */
+    retcode = gsl_fft_complex_inverse (fft_results, 1, N, wavetable, workspace);
+
+    /* free memory */
+    gsl_fft_complex_wavetable_free (wavetable);
+    gsl_fft_complex_workspace_free (workspace);
+
+    return retcode;
+  }
+}
+
+
 /* calculates the power spectral density of the signal data and stores
  * it into psd_results */
 unsigned int psd (unsigned int N, double *data, double *psd_results) {
+  int retcode;
   unsigned int i;
   double *fft_results = (double *) malloc (N*sizeof (double));
-  int retcode = fft (N, data, fft_results);
+  double *data_curated = (double *) malloc (N*sizeof (double));
+  double data_average;
+
+  /* subtract average from signal */
+  average (N, data, &data_average);
+  for (i=0; i<N; i++)
+    data_curated [i] = data [i]-data_average;
+
+  /* perform fft of signal */
+  retcode = fft (N, data_curated, fft_results);
+
+  /* set the psd as the square modulus of the resulting fft */
   for (i=0; i<N; i++) {
     double re = fft_real (i,N,fft_results);
     double im = fft_im (i,N,fft_results);
     psd_results [i] = re*re+im*im;
   }
   free (fft_results);
+  free (data_curated);
   return retcode;
 }

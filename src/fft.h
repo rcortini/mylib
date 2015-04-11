@@ -3,8 +3,10 @@
 
 #include "powers.h"
 #include "utils.h"
+#include "average_variance.h"
 #include <gsl/gsl_fft_real.h>
 #include <gsl/gsl_fft_halfcomplex.h>
+#include <gsl/gsl_fft_complex.h>
 
 double fft_real (unsigned int k, unsigned int N, double *fft_results);
 
@@ -15,6 +17,10 @@ void print_fft_results (unsigned int N, double *fft_results, unsigned int vflag)
 unsigned int fft (unsigned int N, double *data, double *fft_results);
 
 unsigned int inverse_fft (unsigned int N, double *data, double *fft_results);
+
+unsigned int complex_fft (unsigned int N, double *data, double *fft_results);
+
+unsigned int complex_inverse_fft (unsigned int N, double *data, double *fft_results);
 
 unsigned int psd (unsigned int N, double *data, double *psd_results);
 
