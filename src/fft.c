@@ -97,7 +97,7 @@ unsigned int inverse_fft (unsigned int N, double *data, double *fft_results) {
   /* use the corresponding routine if N is power of 2 */
   if (is_power_of_n (N,2)) {
     /* perform the fft */
-    return gsl_fft_halfcomplex_radix2_transform (fft_results, 1, N);
+    return gsl_fft_halfcomplex_radix2_inverse (fft_results, 1, N);
   }
   else {
     int retcode;
