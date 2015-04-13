@@ -56,7 +56,6 @@ struct nlin_fit_parameters {
   double (*model_f) (double x, const gsl_vector *par);
   double (*model_df) (unsigned int i, double x, const gsl_vector *par);
   size_t npars;
-  struct data *d;
   double eps_abs;
   double eps_rel;
   size_t max_iter;
