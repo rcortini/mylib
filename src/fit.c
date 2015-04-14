@@ -87,6 +87,7 @@ void print_multifit_results (multifit_results *fit_results, unsigned int vflag) 
 	printf ("%.8e ", gsl_matrix_get (fit_results->cov, i, j));
       printf ("\n");
     }
+    printf ("\n\tchi2 = %g\n", fit_results->chisq);
   }
   else {
     for (i=0; i<dim; i++)

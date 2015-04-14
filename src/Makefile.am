@@ -20,6 +20,7 @@ pkginclude_HEADERS = mylib.h\
 		  powers.h\
 		  fft.h\
 		  correlation.h\
+		  exp_fit.h\
 		  chi2.h
 
 libmylib_la_SOURCES = utils.c utils.h\
@@ -37,6 +38,7 @@ libmylib_la_SOURCES = utils.c utils.h\
 		      powers.c powers.h\
 		      fft.c fft.h\
 		      correlation.c correlation.h\
+		      exp_fit.c exp_fit.h\
 		      chi2.c chi2.h
 
 libmylib_la_CPPFLAGS = @GSL_INCLUDES@
