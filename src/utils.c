@@ -43,11 +43,18 @@ int safe_realloc (unsigned int new_vector_size, double **vector) {
   return 0;
 }
 
-/* reads the first ncols of data from input_file, and stores the values
- * in the data [i] pointer */
-unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data) {
-  unsigned int i, n, vector_size;
+
+
+unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data) {
+  unsigned int i, j, n, vector_size;
   char word [MAX_LINE_SIZE];
+
+  /* check the "cols" array */
+  for (i=1; i<ncols; i++)
+    if (cols[i]<=cols[i-1]) {
+      err_message ("\"cols\" vector must be strictly increasing!\n");
+      exit (EXIT_FAILURE);
+    }
 
   /* initialize the vectors to read */
   vector_size = CHUNK_SIZE;
@@ -75,63 +82,21 @@ unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data) {
       continue;
     else {
       int bytes_now=0, bytes_consumed=0;
-      for (i=0; i<ncols; i++) {
+      i=0;
+      j=0;
+      while (i<ncols) {
 	if (sscanf (word+bytes_consumed, "%lf%n", &val, &bytes_now) == 1) {
-	  (*data) [i] [n] = val;
 	  bytes_consumed += bytes_now;
+	  if (j==cols[i])
+	    (*data) [i++] [n] = val;
+	  j++;
 	}
 	else {
-	  err_message ("File does not contain %d columns!\n", ncols);
+	  err_message ("Error reading column number %d!\n", j);
 	  exit (EXIT_FAILURE);
 	}
       }
       n++;
-    }
-  }
-
-  /* return the number of lines read */
-  return n;
-}
-
-/* reads the col_n-th (starts from 1!) column from a file, and stores it into the data
- * pointer */
-unsigned int read_data_single_col (FILE *f_in, unsigned int col_n, double **data) {
-  unsigned int n, vector_size;
-  char word [MAX_LINE_SIZE];
-
-  /* initialize the vectors to read */
-  vector_size = CHUNK_SIZE;
-  *data = (double *) malloc (vector_size * (sizeof (double)));
-
-  /* scan the input file */
-  n = 0;
-  while (fgets (word, sizeof (word), f_in) != NULL) { 
-    double val;
-
-    /* expand the data array if necessary */
-    if (n>vector_size-1) {
-      vector_size += CHUNK_SIZE;
-      if (safe_realloc (vector_size, data)) {
-	err_message ("No more memory!\n");
-	exit (EXIT_FAILURE);
-      }
-    }
-
-    /* if it is not a comment, scan a line */
-    if (word [0] == '#')
-      continue;
-    else {
-      unsigned int i;
-      int bytes_now=0, bytes_consumed=0;
-      for (i=0; i<col_n; i++) {
-	if (sscanf (word+bytes_consumed, "%lf%n", &val, &bytes_now) == 1)
-	  bytes_consumed += bytes_now;
-	else {
-	  err_message ("File does not contain %d columns!\n", col_n);
-	  exit (EXIT_FAILURE);
-	}
-      }
-      (*data) [n++] = val;
     }
   }
 

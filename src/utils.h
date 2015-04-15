@@ -16,8 +16,6 @@ FILE *safe_fopen (const char *path, const char *mode);
 
 int safe_realloc (unsigned int new_vector_size, double **vector);
 
-unsigned int read_data (FILE *f_in, unsigned int ncols, double ***data);
-
-unsigned int read_data_single_col (FILE *f_in, unsigned int col_n, double **data);
+unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data);
 
 #endif
