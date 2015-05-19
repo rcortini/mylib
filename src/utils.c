@@ -103,3 +103,51 @@ unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, doub
   /* return the number of lines read */
   return n;
 }
+
+/* parses a list of ranges, as specified by commas and dashes */
+unsigned int parse_ranges (const char *orig_string, unsigned int **cols) {
+  unsigned int i, n = 0, ncols = 0;
+  const char *comma = ",", *dash = "-";
+  char *string, *token;
+  char *vals [MAX_RANGES];
+
+  /* alloc memory for the cols vector */
+  *cols = (unsigned int *) malloc (MAX_RANGES * sizeof (unsigned int));
+
+  /* copy the original string to a new one, since the function
+   * strtok will modify it */
+  string = strdup (orig_string);
+
+  /* extract comma-separated values */
+  token = strtok (string, comma);
+  vals [n++] = token;
+  while (token) {
+    token = strtok (NULL, comma);
+    vals [n++] = token;
+  }
+  n--;
+
+  /* search for dashes in the values */
+  for (i=0; i<n; i++) {
+    /* seeks for a dash */
+    token = strtok (vals [i], dash);
+    sscanf (token, "%u", cols [ncols++]);
+
+    /* seeks for another dash */
+    token = strtok (NULL, dash);
+    if (token) {
+      unsigned int prev = *cols [ncols-1];
+      unsigned int tmp;
+      sscanf (token, "%u", &tmp);
+      if (tmp <= prev) {
+	err_message ("Invalid range specified\n");
+	exit (EXIT_FAILURE);
+      }
+      while (prev++!=tmp)
+	*cols [ncols++] = prev;
+    }
+  }
+
+  free (string);
+  return ncols;
+}
