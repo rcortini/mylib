@@ -11,10 +11,10 @@ void print_linear_fit_results (linear_fit_results *fit_results, unsigned int vfl
   if (vflag) {
     printf ("LEAST-SQUARE LINEAR REGRESSION:\n");
     printf ("\tGSL exit code = %s\n", gsl_strerror (fit_results->retcode));
-    printf ("\tc0 = %f c1 = %f\n\n", fit_results->c0, fit_results->c1);
+    printf ("\tc0 = %.8e c1 = %.8e\n\n", fit_results->c0, fit_results->c1);
     printf ("\tcovariance matrix:\n");
-    printf ("\t[ %f  %f ]\n", fit_results->cov00, fit_results->cov01);
-    printf ("\t[ %f  %f ]\n", fit_results->cov01, fit_results->cov11);
+    printf ("\t[ %.8e  %.8e ]\n", fit_results->cov00, fit_results->cov01);
+    printf ("\t[ %.8e  %.8e ]\n", fit_results->cov01, fit_results->cov11);
     printf ("\tchi squared = %f\n", fit_results->chisq);
   }
   else
