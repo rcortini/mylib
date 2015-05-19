@@ -43,8 +43,8 @@ int safe_realloc (unsigned int new_vector_size, double **vector) {
   return 0;
 }
 
-
-
+/* reads the data file f_in and scans for ncols columns, specified by the
+ * vector cols, and stores the data into data */
 unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data) {
   unsigned int i, j, n, vector_size;
   char word [MAX_LINE_SIZE];
