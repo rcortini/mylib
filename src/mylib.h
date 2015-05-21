@@ -18,5 +18,6 @@
 #include <mylib/fft.h>
 #include <mylib/correlation.h>
 #include <mylib/exp_fit.h>
+#include <mylib/random.h>
 
 #endif
