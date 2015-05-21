@@ -5,7 +5,7 @@ int metropolis (gsl_rng *RNG, double beta, double H_initial, double H_final) {
   if (H_final <= H_initial)
     return 1;
   else {
-    if (ran_01(RNG)<exp (beta*(H_initial-H_final)))
+    if (ran_uniform (RNG,0.,1.)<exp (-beta*(H_final-H_initial)))
       return 1;
     else
       return 0;
