@@ -144,7 +144,7 @@ unsigned int parse_ranges (const char *orig_string, unsigned int **cols) {
 	exit (EXIT_FAILURE);
       }
       while (prev++!=tmp)
-	*cols [ncols++] = prev;
+	(*cols) [ncols++] = prev;
     }
   }
 
