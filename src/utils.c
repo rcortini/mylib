@@ -136,7 +136,7 @@ unsigned int parse_ranges (const char *orig_string, unsigned int **cols) {
     /* seeks for another dash */
     token = strtok (NULL, dash);
     if (token) {
-      unsigned int prev = *cols [ncols-1];
+      unsigned int prev = (*cols) [ncols-1];
       unsigned int tmp;
       sscanf (token, "%u", &tmp);
       if (tmp <= prev) {
