@@ -11,6 +11,7 @@ pkginclude_HEADERS = mylib.h\
 		  fit.h\
 		  f_deriv.h\
 		  f_interp.h\
+		  f_int.h\
 		  f_root.h\
 		  f_min.h\
 		  f_multimin.h\
@@ -32,6 +33,7 @@ libmylib_la_SOURCES = utils.c utils.h\
 		      fit.c fit.h\
 		      f_deriv.c f_deriv.h\
 		      f_interp.c f_interp.h\
+		      f_int.c f_int.h\
 		      f_root.c f_root.h\
 		      f_min.c f_min.h\
 		      f_multimin.c f_multimin.h\

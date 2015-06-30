@@ -9,6 +9,7 @@
 #include <mylib/fit.h>
 #include <mylib/f_deriv.h>
 #include <mylib/f_interp.h>
+#include <mylib/f_int.h>
 #include <mylib/f_root.h>
 #include <mylib/f_min.h>
 #include <mylib/f_multimin.h>
