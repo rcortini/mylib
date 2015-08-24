@@ -43,6 +43,16 @@ int safe_realloc (unsigned int new_vector_size, double **vector) {
   return 0;
 }
 
+/* checks if a file exists. should be very portable */
+int file_exists (const char *filename) {
+  if (access (filename, F_OK) != -1) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 /* reads the data file f_in and scans for ncols columns, specified by the
  * vector cols, and stores the data into data */
 unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data) {
