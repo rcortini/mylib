@@ -22,5 +22,6 @@
 #include <mylib/random.h>
 #include <mylib/mc.h>
 #include <mylib/genmath.h>
+#include <mylib/series_accel.h>
 
 #endif
