@@ -1,7 +1,7 @@
 #include "correlation.h"
 #include <stdio.h>
 
-unsigned int correlation (unsigned int N, double *data, double *corr) {
+size_t correlation (size_t N, double *data, double *corr) {
   int psd_retcode;
   double *psd_results = (double *) malloc (N*sizeof (double));
 

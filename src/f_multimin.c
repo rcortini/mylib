@@ -6,7 +6,7 @@
  * which also contains the pointer to the function to minimize, and the parameters
  * of the function to minimize. */
 int f_multimin (const gsl_vector *x_start, gsl_vector *x_min, struct f_multimin_par *par) {
-  unsigned int iter, i;
+  size_t iter, i;
   int status;
   double size;
   gsl_multimin_fminimizer *s;
@@ -36,7 +36,7 @@ int f_multimin (const gsl_vector *x_start, gsl_vector *x_min, struct f_multimin_
     status = gsl_multimin_test_size (size, par->size_tol);
 
     if (par->verbose) {
-      printf ("%u: f (", iter);
+      printf ("%lu: f (", iter);
       for (i=0; i<par->dim; i++) printf ("%f, ", gsl_vector_get (s->x, i));
       printf (") = %f, size = %f\n", s->fval, size);
     }

@@ -7,14 +7,14 @@
 
 double exp_f (double x, const gsl_vector *par);
 
-double exp_df (unsigned int i, double x, const gsl_vector *par);
+double exp_df (size_t i, double x, const gsl_vector *par);
 
 multifit_results *
 exp_fit_w_sigma (
     double A0,
     double lambda0,
     double b0,
-    unsigned int N,
+    size_t N,
     double *x,
     double *y,
     double *sigma);

@@ -8,20 +8,20 @@
 #include <gsl/gsl_fft_halfcomplex.h>
 #include <gsl/gsl_fft_complex.h>
 
-double fft_real (unsigned int k, unsigned int N, double *fft_results);
+double fft_real (size_t k, size_t N, double *fft_results);
 
-double fft_im (unsigned int k, unsigned int N, double *fft_results);
+double fft_im (size_t k, size_t N, double *fft_results);
 
-void print_fft_results (unsigned int N, double *fft_results, unsigned int vflag);
+void print_fft_results (size_t N, double *fft_results, size_t vflag);
 
-unsigned int fft (unsigned int N, double *data, double *fft_results);
+size_t fft (size_t N, double *data, double *fft_results);
 
-unsigned int inverse_fft (unsigned int N, double *data, double *fft_results);
+size_t inverse_fft (size_t N, double *data, double *fft_results);
 
-unsigned int complex_fft (unsigned int N, double *data, double *fft_results);
+size_t complex_fft (size_t N, double *data, double *fft_results);
 
-unsigned int complex_inverse_fft (unsigned int N, double *data, double *fft_results);
+size_t complex_inverse_fft (size_t N, double *data, double *fft_results);
 
-unsigned int psd (unsigned int N, double *data, double *psd_results);
+size_t psd (size_t N, double *data, double *psd_results);
 
 #endif

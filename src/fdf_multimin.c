@@ -22,7 +22,7 @@ int fdf_multimin (const gsl_vector *X, gsl_vector *X_min, struct fdf_multimin_pa
   /* start the iteration */
   iter = 0;
   do {
-    unsigned int i;
+    size_t i;
     iter++;
     status = gsl_multimin_fdfminimizer_iterate (s);
 

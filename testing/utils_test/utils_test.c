@@ -4,7 +4,7 @@
 const char *program_name = "utils_test";
 
 int main () {
-  unsigned int i, j, col_n=4, N;
+  size_t i, j, col_n=4, N;
   /* double **data; */
   double *data;
   const char *big_file_name = "test_big_data.dat";

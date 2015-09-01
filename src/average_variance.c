@@ -6,8 +6,8 @@
 
 
 
-inline void calculate_sum (unsigned int n, double *data, double *sum) {
-  unsigned int i;
+inline void calculate_sum (size_t n, double *data, double *sum) {
+  size_t i;
   *sum=0.;
   for (i=0; i<n; i++)
     *sum += data[i];
@@ -15,8 +15,8 @@ inline void calculate_sum (unsigned int n, double *data, double *sum) {
 
 
 
-inline void calculate_sum_sum2 (unsigned int n, double *data, double *sum, double *sum2) {
-  unsigned int i;
+inline void calculate_sum_sum2 (size_t n, double *data, double *sum, double *sum2) {
+  size_t i;
   *sum=0.; *sum2=0.;
   for (i=0; i<n; i++) {
     double value=data[i];
@@ -28,7 +28,7 @@ inline void calculate_sum_sum2 (unsigned int n, double *data, double *sum, doubl
 
 
 /* average and standard deviation of a vector */
-unsigned int average (unsigned int N, double *data, double *av) {
+size_t average (size_t N, double *data, double *av) {
   double sum;
   double n = (double) N; /* cast to double */
 
@@ -50,7 +50,7 @@ unsigned int average (unsigned int N, double *data, double *av) {
 
 
 /* calculates only the variance */
-unsigned int variance (unsigned int N, double *data, double *var) {
+size_t variance (size_t N, double *data, double *var) {
   double sum, sum2, av;
   double n = (double) N; /* cast to double */
 
@@ -75,9 +75,9 @@ unsigned int variance (unsigned int N, double *data, double *var) {
 
 
 /* calculates only the standard deviation */
-unsigned int devst (unsigned int N, double *data, double *ds) {
+size_t devst (size_t N, double *data, double *ds) {
   double var;
-  unsigned int retcode = variance (N, data, &var);
+  size_t retcode = variance (N, data, &var);
   *ds = _DEVST (var);
   return retcode;
 }
@@ -85,7 +85,7 @@ unsigned int devst (unsigned int N, double *data, double *ds) {
 
 
 /* average and standard deviation of a vector */
-unsigned int average_variance (unsigned int N, double *data, double *av, double *var) {
+size_t average_variance (size_t N, double *data, double *av, double *var) {
   double sum, sum2;
   double n = (double) N; /* cast to double */
 
@@ -110,7 +110,7 @@ unsigned int average_variance (unsigned int N, double *data, double *av, double 
 
 
 /* average and standard deviation of a vector */
-unsigned int average_devst (unsigned int N, double *data, double *av, double *ds) {
+size_t average_devst (size_t N, double *data, double *av, double *ds) {
   double sum, sum2, var;
   double n = (double) N; /* cast to double */
 

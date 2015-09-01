@@ -7,7 +7,7 @@
 
 
 /* print linear fitting results */
-void print_linear_fit_results (linear_fit_results *fit_results, unsigned int vflag) {
+void print_linear_fit_results (linear_fit_results *fit_results, size_t vflag) {
   if (vflag) {
     printf ("LEAST-SQUARE LINEAR REGRESSION:\n");
     printf ("\tGSL exit code = %s\n", gsl_strerror (fit_results->retcode));
@@ -24,7 +24,7 @@ void print_linear_fit_results (linear_fit_results *fit_results, unsigned int vfl
 
 
 /* performes unweighted least-square linear fitting of data stored in x, y */
-void linear_fit (unsigned int N, double *x, double *y, linear_fit_results *fit_results) {
+void linear_fit (size_t N, double *x, double *y, linear_fit_results *fit_results) {
   /* check that we have at least two values for the determination of standard deviation */
   if (N < 3) {
     err_message ("Insufficient data for linear fitting!\n");
@@ -45,7 +45,7 @@ void linear_fit (unsigned int N, double *x, double *y, linear_fit_results *fit_r
 
 
 /* performes weighted least-square linear fitting of data stored in x, y, w */
-void weighted_linear_fit (unsigned int N, double *x, double *y, double *w, linear_fit_results *fit_results) {
+void weighted_linear_fit (size_t N, double *x, double *y, double *w, linear_fit_results *fit_results) {
   /* check that we have at least two values for the determination of standard deviation */
   if (N < 3) {
     err_message ("Insufficient data for linear fitting!\n");
@@ -70,15 +70,15 @@ void weighted_linear_fit (unsigned int N, double *x, double *y, double *w, linea
 
 
 /* print results of multidimensional fitting */
-void print_multifit_results (multifit_results *fit_results, unsigned int vflag) {
-  unsigned int i, j;
-  const unsigned int dim = fit_results->dim;
+void print_multifit_results (multifit_results *fit_results, size_t vflag) {
+  size_t i, j;
+  const size_t dim = fit_results->dim;
   if (vflag) {
     printf ("MULTIDIMENSIONAL FITTING RESULTS:\n");
     printf ("\tGSL exit code = %s\n", gsl_strerror (fit_results->retcode));
     printf ("\tBest fit parameters:\n");
     for (i=0; i<dim; i++) {
-      printf ("\tc [%d] = %.8e +/- %.8e\n", i, gsl_vector_get (fit_results->c, i), sqrt (gsl_matrix_get (fit_results->cov, i, i)));
+      printf ("\tc [%lu] = %.8e +/- %.8e\n", i, gsl_vector_get (fit_results->c, i), sqrt (gsl_matrix_get (fit_results->cov, i, i)));
     }
     printf ("\tCovariance matrix:\n");
     for (i=0; i<dim; i++) {
@@ -98,7 +98,7 @@ void print_multifit_results (multifit_results *fit_results, unsigned int vflag) 
 
 
 /* allocates memory for multidimensional fitting results */
-multifit_results * multifit_results_alloc (unsigned int dim) {
+multifit_results * multifit_results_alloc (size_t dim) {
   multifit_results *fit_results = (multifit_results *) malloc (sizeof (multifit_results));
   fit_results->cov = gsl_matrix_alloc (dim, dim);
   fit_results->c = gsl_vector_alloc (dim);
@@ -120,11 +120,11 @@ void multifit_results_free (multifit_results *fit_results) {
 /* performs a least-square linear fitting of data to a polynomial of type
  * y = sum_n^degree c_n (x-x0)^2
  * and returns the coefficients c_n */
-void polynomial_fit (unsigned int N, double *x, double *y, unsigned int degree, double x0, multifit_results *fit_results) {
+void polynomial_fit (size_t N, double *x, double *y, size_t degree, double x0, multifit_results *fit_results) {
   gsl_multifit_linear_workspace *ws;
   gsl_matrix *X = gsl_matrix_alloc (N, degree);
   gsl_vector *Y = gsl_vector_alloc (N);
-  unsigned int i, j;
+  size_t i, j;
 
   /* initialize X and Y matrices */
   for (i=0; i<N; i++) {
@@ -154,7 +154,7 @@ void polynomial_fit (unsigned int N, double *x, double *y, unsigned int degree, 
  * method */
 void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, multifit_results *results) {
   int retcode;
-  unsigned int iter = 0, npars = fit_p->npars, n = fit_p->n;
+  size_t iter = 0, npars = fit_p->npars, n = fit_p->n;
   const gsl_multifit_fdfsolver_type *T = fit_p->type;
   gsl_multifit_fdfsolver *s;
   gsl_multifit_function_fdf f;
@@ -210,7 +210,7 @@ void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, mul
 /* calculates the value of the chi^2, as a function of the best-fit vector of 
  * parameters, and the parameters of the function fitter */
 double chi2_from_fit (gsl_vector *fit, struct nlin_fit_parameters *fit_pars) {
-  unsigned int i;
+  size_t i;
   double chi2 = 0.;
   gsl_vector *f = gsl_vector_alloc (fit_pars->n);
   chi_f (fit, fit_pars, f);

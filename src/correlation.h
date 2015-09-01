@@ -4,6 +4,6 @@
 #include "mylib_retcodes.h"
 #include "fft.h"
 
-unsigned int correlation (unsigned int N, double *data, double *corr);
+size_t correlation (size_t N, double *data, double *corr);
 
 #endif

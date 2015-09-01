@@ -3,7 +3,7 @@
 /* this function minimizes the one-dimensional function, starting at point
    x0, in the interval [x_min, x_max]. */
 int f_min (double x_min, double x0, double x_max, double *minimum, struct f_min_params *par) {
-  unsigned int iter;
+  size_t iter;
   int status;
   double x_lo, x_hi;
   gsl_function func;
@@ -30,7 +30,7 @@ int f_min (double x_min, double x0, double x_max, double *minimum, struct f_min_
     status = gsl_min_test_interval (x_lo, x_hi, par->eps_abs, par->eps_rel);
 
     if (par->verbose)
-      printf ("iter %d: x_lo = %f x_hi = %f\n", iter, x_lo, x_hi);
+      printf ("iter %lu: x_lo = %f x_hi = %f\n", iter, x_lo, x_hi);
 
   } while (status==GSL_CONTINUE && iter<par->max_iter);
 

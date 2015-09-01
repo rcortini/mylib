@@ -22,29 +22,29 @@ typedef struct linear_fit_results {
   int retcode;
 } linear_fit_results;
 
-void print_linear_fit_results (linear_fit_results *fit_results, unsigned int vflag);
+void print_linear_fit_results (linear_fit_results *fit_results, size_t vflag);
 
-void linear_fit (unsigned int N, double *x, double *y, linear_fit_results *fit_results);
+void linear_fit (size_t N, double *x, double *y, linear_fit_results *fit_results);
 
-void weighted_linear_fit (unsigned int N, double *x, double *y, double *w, linear_fit_results *fit_results);
+void weighted_linear_fit (size_t N, double *x, double *y, double *w, linear_fit_results *fit_results);
 
 /* multidimensional fitting */
 
 typedef struct multifit_results {
   gsl_vector *c;
   gsl_matrix *cov;
-  unsigned int dim;
+  size_t dim;
   int retcode;
   double chisq;
 } multifit_results;
 
-void print_multifit_results (multifit_results *fit_results, unsigned int vflag);
+void print_multifit_results (multifit_results *fit_results, size_t vflag);
 
-multifit_results * multifit_results_alloc (unsigned int degree);
+multifit_results * multifit_results_alloc (size_t degree);
 
 void multifit_results_free (multifit_results *fit_results);
 
-void polynomial_fit (unsigned int N, double *x, double *y, unsigned int degree, double x0, multifit_results *fit_result);
+void polynomial_fit (size_t N, double *x, double *y, size_t degree, double x0, multifit_results *fit_result);
 
 /* this structure contains all the information necessary to perform the
  * non-linear least-square fit */
@@ -54,7 +54,7 @@ struct nlin_fit_parameters {
   double *y;
   double *sigma;
   double (*model_f) (double x, const gsl_vector *par);
-  double (*model_df) (unsigned int i, double x, const gsl_vector *par);
+  double (*model_df) (size_t i, double x, const gsl_vector *par);
   size_t npars;
   double eps_abs;
   double eps_rel;

@@ -1,12 +1,12 @@
 #include "block_average.h"
 
-void print_block_average_results (block_average_results *results, unsigned int vflag) {
-  unsigned int i;
-  const unsigned int nblocks = results->nblocks;
+void print_block_average_results (block_average_results *results, size_t vflag) {
+  size_t i;
+  const size_t nblocks = results->nblocks;
   if (vflag) {
     printf ("BLOCK AVERAGING RESULTS:\n");
     for (i=0; i<nblocks; i++)
-      printf ("nblocks = %d: nvals = %d, nstride = %d, mean = %.8e variance = %.8e block variance = %.8e\n",
+      printf ("nblocks = %lu: nvals = %lu, nstride = %lu, mean = %.8e variance = %.8e block variance = %.8e\n",
 	  i+1,
 	  results->nvals [i],
 	  results->nstride [i],
@@ -16,7 +16,7 @@ void print_block_average_results (block_average_results *results, unsigned int v
   }
   else {
     for (i=0; i<nblocks; i++)
-      printf ("%d %d %.8e %.8e %.8e\n",
+      printf ("%lu %lu %.8e %.8e %.8e\n",
 	  results->nvals [i],
 	  results->nstride [i],
 	  results->mean [i],
@@ -27,14 +27,14 @@ void print_block_average_results (block_average_results *results, unsigned int v
 
 
 /* alloc the memory necessary for the block averaging */
-block_average_results * block_average_results_alloc (unsigned int nblocks) {
+block_average_results * block_average_results_alloc (size_t nblocks) {
   block_average_results * results = (block_average_results *) malloc (sizeof (block_average_results));
   results->nblocks = nblocks;
   results->mean = (double *) malloc (nblocks*sizeof (double));
   results->var = (double *) malloc (nblocks*sizeof (double));
   results->blockvar = (double *) malloc (nblocks*sizeof (double));
-  results->nstride = (int *) malloc (nblocks*sizeof (double));
-  results->nvals = (int *) malloc (nblocks*sizeof (double));
+  results->nstride = (size_t *) malloc (nblocks*sizeof (double));
+  results->nvals = (size_t *) malloc (nblocks*sizeof (double));
   return results;
 }
 
@@ -53,15 +53,15 @@ void block_average_results_free (block_average_results *results) {
 
 
 /* block averaging */
-unsigned int block_average (unsigned int N, double *data, unsigned int nblocks, block_average_results *results) {
-  unsigned int n, i, j, k;
+size_t block_average (size_t N, double *data, size_t nblocks, block_average_results *results) {
+  size_t n, i, j, k;
   double *blockdata = (double *) malloc (N*sizeof (double));
   double *blockmean = (double *) malloc (nblocks*sizeof (double));
   double *blockvar = (double *) malloc (nblocks*sizeof (double));
 
   /* cycle on all block sizes from n = 1 to nblocks */
   for (n=0; n<nblocks; n++) {
-    const unsigned int nstride = N/(n+1);
+    const size_t nstride = N/(n+1);
     /* we divide the data into n+1 blocks, each of length nstride, then we iterate
      * over every block */
     j=0;

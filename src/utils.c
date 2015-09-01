@@ -34,7 +34,7 @@ FILE *safe_fopen (const char *path, const char *mode) {
 }
 
 /* a function that checks the return value of realloc */
-int safe_realloc (unsigned int new_vector_size, double **vector) {
+int safe_realloc (size_t new_vector_size, double **vector) {
   double *is_null;
   is_null = (double *) realloc (*vector, new_vector_size * sizeof (double));
   if (is_null == NULL)
@@ -55,8 +55,8 @@ int file_exists (const char *filename) {
 
 /* reads the data file f_in and scans for ncols columns, specified by the
  * vector cols, and stores the data into data */
-unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data) {
-  unsigned int i, j, n, vector_size;
+size_t read_data (FILE *f_in, size_t ncols, size_t *cols, double ***data) {
+  size_t i, j, n, vector_size;
   char word [MAX_LINE_SIZE];
 
   /* check the "cols" array */
@@ -115,14 +115,14 @@ unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, doub
 }
 
 /* parses a list of ranges, as specified by commas and dashes */
-unsigned int parse_ranges (const char *orig_string, unsigned int **cols) {
-  unsigned int i, n = 0, ncols = 0;
+size_t parse_ranges (const char *orig_string, size_t **cols) {
+  size_t i, n = 0, ncols = 0;
   const char *comma = ",", *dash = "-";
   char *string, *token;
   char *vals [MAX_RANGES];
 
   /* alloc memory for the cols vector */
-  *cols = (unsigned int *) malloc (MAX_RANGES * sizeof (unsigned int));
+  *cols = (size_t *) malloc (MAX_RANGES * sizeof (size_t));
 
   /* copy the original string to a new one, since the function
    * strtok will modify it */
@@ -141,14 +141,14 @@ unsigned int parse_ranges (const char *orig_string, unsigned int **cols) {
   for (i=0; i<n; i++) {
     /* seeks for a dash */
     token = strtok (vals [i], dash);
-    sscanf (token, "%u", &(*cols) [ncols++]);
+    sscanf (token, "%lu", &(*cols) [ncols++]);
 
     /* seeks for another dash */
     token = strtok (NULL, dash);
     if (token) {
-      unsigned int prev = (*cols) [ncols-1];
-      unsigned int tmp;
-      sscanf (token, "%u", &tmp);
+      size_t prev = (*cols) [ncols-1];
+      size_t tmp;
+      sscanf (token, "%lu", &tmp);
       if (tmp <= prev) {
 	err_message ("Invalid range specified\n");
 	exit (EXIT_FAILURE);

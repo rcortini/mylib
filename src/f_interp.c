@@ -1,8 +1,8 @@
 #include "f_interp.h"
 
 /* initializes a pointer to an interpolator */
-struct f_interp_par * f_interp_init (unsigned int N, double *x, double *y) {
-  unsigned int i;
+struct f_interp_par * f_interp_init (size_t N, double *x, double *y) {
+  size_t i;
 
   /* memory allocation for the interpolator structure */
   struct f_interp_par *p = (struct f_interp_par *) malloc (sizeof (*p));

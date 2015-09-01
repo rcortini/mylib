@@ -14,7 +14,7 @@ double exp_f (double x, const gsl_vector *par) {
 
 /* gradient of the exponential function wrt the parameters A, lambda
  * and b */
-double exp_df (unsigned int i, double x, const gsl_vector *par) {
+double exp_df (size_t i, double x, const gsl_vector *par) {
   const double A = gsl_vector_get (par, 0);
   const double lambda = gsl_vector_get (par, 1);
   switch (i) {
@@ -40,7 +40,7 @@ exp_fit_w_sigma (
     double A0,
     double lambda0,
     double b0,
-    unsigned int N,
+    size_t N,
     double *x,
     double *y,
     double *sigma) {

@@ -17,12 +17,12 @@ void err_message (const char *text, ...);
 
 FILE *safe_fopen (const char *path, const char *mode);
 
-int safe_realloc (unsigned int new_vector_size, double **vector);
+int safe_realloc (size_t new_vector_size, double **vector);
 
 int file_exists (const char *filename);
 
-unsigned int read_data (FILE *f_in, unsigned int ncols, unsigned int *cols, double ***data);
+size_t read_data (FILE *f_in, size_t ncols, size_t *cols, double ***data);
 
-unsigned int parse_ranges (const char *orig_string, unsigned int **cols);
+size_t parse_ranges (const char *orig_string, size_t **cols);
 
 #endif

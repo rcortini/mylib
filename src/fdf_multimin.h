@@ -6,7 +6,7 @@
 
 /* fdf_multimin.c */
 struct fdf_multimin_par {
-  unsigned int verbose;
+  size_t verbose;
   size_t dim;
   size_t max_iter;
   double step_size;

@@ -6,10 +6,10 @@
 
 /* f_multimin.c */
 struct f_multimin_par {
-  unsigned int verbose;
-  unsigned int dim;
+  size_t verbose;
+  size_t dim;
   double size_tol;
-  unsigned int max_iter;
+  size_t max_iter;
   gsl_vector *step_size;
   const gsl_multimin_fminimizer_type *type;
   double (*func) (const gsl_vector *X, void *p);

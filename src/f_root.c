@@ -2,7 +2,7 @@
 
 /* this function returns the solution to f (x) = 0 */
 int f_root (double x_min, double x_max, double *root, struct f_root_params *par) {
-  unsigned int iter;
+  size_t iter;
   int status;
   double x_lo, x_hi;
   gsl_root_fsolver *s;
@@ -27,7 +27,7 @@ int f_root (double x_min, double x_max, double *root, struct f_root_params *par)
     status = gsl_root_test_interval (x_lo, x_hi, par->eps_abs, par->eps_rel);
 
     if (par->verbose) 
-      fprintf (stderr, "%d: x = %f\n", iter, *root);
+      fprintf (stderr, "%lu: x = %f\n", iter, *root);
   }
   while (status==GSL_CONTINUE && iter<par->max_iter);
 

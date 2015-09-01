@@ -7,12 +7,12 @@
 struct f_interp_par {
   gsl_interp_accel *interp_accel;
   gsl_spline *interp_spline;
-  unsigned int N;
+  size_t N;
   double x_min;
   double x_max;
 };
 
-struct f_interp_par * f_interp_init (unsigned int N, double *x, double *y);
+struct f_interp_par * f_interp_init (size_t N, double *x, double *y);
 
 double f_interp (double x, void *p);
 

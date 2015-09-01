@@ -6,14 +6,14 @@
 #include "mylib_retcodes.h"
 #include "utils.h"
 
-unsigned int average (unsigned int N, double *data, double *av);
+size_t average (size_t N, double *data, double *av);
 
-unsigned int variance (unsigned int N, double *data, double *var);
+size_t variance (size_t N, double *data, double *var);
 
-unsigned int devst (unsigned int N, double *data, double *ds);
+size_t devst (size_t N, double *data, double *ds);
 
-unsigned int average_variance (unsigned int N, double *data, double *av, double *var);
+size_t average_variance (size_t N, double *data, double *av, double *var);
 
-unsigned int average_devst (unsigned int N, double *data, double *av, double *ds);
+size_t average_devst (size_t N, double *data, double *av, double *ds);
 
 #endif

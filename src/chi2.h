@@ -10,7 +10,7 @@ typedef struct chi2_parameters {
   double *y;
   double *sigma;
   double (*model_f) (double x, const gsl_vector *par);
-  double (*model_df) (unsigned int i, double x, const gsl_vector *par);
+  double (*model_df) (size_t i, double x, const gsl_vector *par);
   size_t npars;
 } chi2_parameters;
 

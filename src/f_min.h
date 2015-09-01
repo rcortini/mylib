@@ -7,12 +7,12 @@
 
 /* f_min.c */
 struct f_min_params {
-  unsigned int verbose;
+  size_t verbose;
   double (*func) (double x, void *p);
   void *func_p;
   double eps_rel;
   double eps_abs;
-  unsigned int max_iter;
+  size_t max_iter;
   const gsl_min_fminimizer_type *type;
 };
 

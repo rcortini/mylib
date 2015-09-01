@@ -4,7 +4,7 @@
 
 /* returns the real coefficient of the k-th frequency of a radix2 
  * or non-radix2 FFT */
-double fft_real (unsigned int k, unsigned int N, double *fft_results) {
+double fft_real (size_t k, size_t N, double *fft_results) {
   if (k<N/2)
     return fft_results [k];
   else
@@ -15,7 +15,7 @@ double fft_real (unsigned int k, unsigned int N, double *fft_results) {
 
 /* returns the imaginary coefficient of the k-th frequency of a radix2 
  * or non-radix2 FFT. The storage convention for the two cases is different */
-double fft_im (unsigned int k, unsigned int N, double *fft_results) {
+double fft_im (size_t k, size_t N, double *fft_results) {
   if (k==0 || k==N/2)
     return 0.;
   else {
@@ -35,12 +35,12 @@ double fft_im (unsigned int k, unsigned int N, double *fft_results) {
 
 
 /* prints the results of the fast Fourier transform fft_results */
-void print_fft_results (unsigned int N, double *fft_results, unsigned int vflag) {
-  unsigned int i;
+void print_fft_results (size_t N, double *fft_results, size_t vflag) {
+  size_t i;
   if (vflag) {
     printf ("FAST FOURIER TRANSFORM RESULTS:\n");
     for (i=0; i<N; i++)
-      printf ("f[%d] = Re = %.8e Im = %.8e\n",
+      printf ("f[%lu] = Re = %.8e Im = %.8e\n",
 	  i,
 	  fft_real (i, N, fft_results),
 	  fft_im (i, N, fft_results));
@@ -55,8 +55,8 @@ void print_fft_results (unsigned int N, double *fft_results, unsigned int vflag)
 
 
 /* calculates the fast Fourier transform of signal data, stores it into fft_results */
-unsigned int fft (unsigned int N, double *data, double *fft_results) {
-  unsigned int i;
+size_t fft (size_t N, double *data, double *fft_results) {
+  size_t i;
 
   /* initialize the data for fft */
   for (i=0; i<N; i++) fft_results [i] = data [i];
@@ -88,8 +88,8 @@ unsigned int fft (unsigned int N, double *data, double *fft_results) {
 
 /* calculates the inverse Fourier transform of signal data (half-complex),
  * and stores it into fft_results */
-unsigned int inverse_fft (unsigned int N, double *data, double *fft_results) {
-  unsigned int i;
+size_t inverse_fft (size_t N, double *data, double *fft_results) {
+  size_t i;
 
   /* initialize the data for fft */
   for (i=0; i<N; i++) fft_results [i] = data [i];
@@ -123,8 +123,8 @@ unsigned int inverse_fft (unsigned int N, double *data, double *fft_results) {
  * it into fft_results. The length of the array is 2*N, and the storage
  * convention is that the real and imaginary parts of the complex number are
  * stored in consecutive locations */
-unsigned int complex_fft (unsigned int N, double *data, double *fft_results) {
-  unsigned int i;
+size_t complex_fft (size_t N, double *data, double *fft_results) {
+  size_t i;
 
   /* initialize the data for fft */
   for (i=0; i<2*N; i++) fft_results [i] = data [i];
@@ -156,8 +156,8 @@ unsigned int complex_fft (unsigned int N, double *data, double *fft_results) {
 
 /* calculates the inverse fast Fourier transform of a complex packed array, and stores
  * it into fft_results. Storage conventions as for complex_fft */
-unsigned int complex_inverse_fft (unsigned int N, double *data, double *fft_results) {
-  unsigned int i;
+size_t complex_inverse_fft (size_t N, double *data, double *fft_results) {
+  size_t i;
 
   /* initialize the data for fft */
   for (i=0; i<2*N; i++) fft_results [i] = data [i];
@@ -188,9 +188,9 @@ unsigned int complex_inverse_fft (unsigned int N, double *data, double *fft_resu
 
 /* calculates the power spectral density of the signal data and stores
  * it into psd_results */
-unsigned int psd (unsigned int N, double *data, double *psd_results) {
+size_t psd (size_t N, double *data, double *psd_results) {
   int retcode;
-  unsigned int i;
+  size_t i;
   double *fft_results = (double *) malloc (N*sizeof (double));
   double *data_curated = (double *) malloc (N*sizeof (double));
   double data_average;
