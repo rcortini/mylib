@@ -134,3 +134,41 @@ size_t average_devst (size_t N, double *data, double *av, double *ds) {
 
   return MYLIB_SUCCESS;
 }
+
+
+
+/* recurrence relationship for average:
+ * mean(n+1) = mean(n) + (data(n+1)-mean(n))/(n+1).
+ * CAREFUL: here "n" is exactly as in the formula above, that is
+ * the number of data points that are already in the vector. */
+int average_recurrence (size_t n, double average_old, double new_data, double *average_new) {
+  if (n>0) {
+    *average_new = average_old + (new_data-average_old)/(n+1);
+    return MYLIB_SUCCESS;
+  }
+  else {
+    err_message ("Called %s function with n = 0\n", __FUNCTION__);
+    return MYLIB_FAIL;
+  }
+}
+
+/* recurrence relationship for average:
+ * var(n+1) = (n-1)/n * var(n) + (data(n+1)-mean(n))^2/(n+1).
+ * CAREFUL: here "n" is exactly as in the formula above, that is
+ * the number of data points that are already in the vector. */
+int variance_recurrence (
+    size_t n,
+    double variance_old,
+    double average_old,
+    double new_data,
+    double *variance_new) {
+  if (n>1) {
+    *variance_new = ((double) (n-1))/((double) (n))*variance_old
+      + (new_data-average_old)*(new_data-average_old)/(n+1);
+    return MYLIB_SUCCESS;
+  }
+  else {
+    err_message ("Called %s function with n <= 1\n", __FUNCTION__);
+    return MYLIB_FAIL;
+  }
+}

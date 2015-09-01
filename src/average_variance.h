@@ -16,4 +16,13 @@ size_t average_variance (size_t N, double *data, double *av, double *var);
 
 size_t average_devst (size_t N, double *data, double *av, double *ds);
 
+int average_recurrence (size_t n, double average_old, double new_data, double *average_new);
+
+int variance_recurrence (
+    size_t n,
+    double variance_old,
+    double average_old,
+    double new_data,
+    double *variance_new);
+
 #endif
