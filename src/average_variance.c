@@ -6,7 +6,7 @@
 
 
 
-inline void calculate_sum (size_t n, double *data, double *sum) {
+void calculate_sum (size_t n, double *data, double *sum) {
   size_t i;
   *sum=0.;
   for (i=0; i<n; i++)
@@ -15,7 +15,16 @@ inline void calculate_sum (size_t n, double *data, double *sum) {
 
 
 
-inline void calculate_sum_sum2 (size_t n, double *data, double *sum, double *sum2) {
+void calculate_sum_sum2 (size_t n, double *data, double *sum2) {
+  size_t i;
+  *sum2=0.;
+  for (i=0; i<n; i++)
+    *sum2 += data[i]*data[i];
+}
+
+
+
+void calculate_sum_sum2 (size_t n, double *data, double *sum, double *sum2) {
   size_t i;
   *sum=0.; *sum2=0.;
   for (i=0; i<n; i++) {
