@@ -158,6 +158,7 @@ void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, mul
   const gsl_multifit_fdfsolver_type *T = fit_p->type;
   gsl_multifit_fdfsolver *s;
   gsl_multifit_function_fdf f;
+  gsl_matrix *J = gsl_matrix_alloc (npars, npars);
   chi2_parameters chi2_p;
 
   /* init the chi2 parameters */
@@ -193,7 +194,8 @@ void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, mul
   while (retcode == GSL_CONTINUE && iter < fit_p->max_iter);
 
   /* assign the fit vector and the covariance matrix */
-  gsl_multifit_covar (s->J, 0.0, results->cov);
+  gsl_multifit_fdfsolver_jac (s, J);
+  gsl_multifit_covar (J, 0.0, results->cov);
   gsl_vector_memcpy (results->c, s->x);
 
   /* the chi2 is the norm of the target function at the last
@@ -203,6 +205,7 @@ void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, mul
   /* free memory and return */
   gsl_multifit_fdfsolver_free (s);
   results->retcode = retcode;
+  gsl_matrix_free (J);
 }
 
 
