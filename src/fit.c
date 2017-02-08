@@ -213,16 +213,10 @@ void nlin_fit (const gsl_vector *x_start, struct nlin_fit_parameters *fit_p, mul
 /* calculates the value of the chi^2, as a function of the best-fit vector of 
  * parameters, and the parameters of the function fitter */
 double chi2_from_fit (gsl_vector *fit, struct nlin_fit_parameters *fit_pars) {
-  size_t i;
   double chi2 = 0.;
   gsl_vector *f = gsl_vector_alloc (fit_pars->n);
   chi_f (fit, fit_pars, f);
-
-  for (i=0; i<fit_pars->n; i++) {
-    double fi = gsl_vector_get (f, i);
-    chi2 += fi*fi;
-  }
-
+  chi2 = gsl_blas_dnrm2 (f)/(fit_pars->n-fit_pars->npars);
   gsl_vector_free (f);
   return chi2;
 }
